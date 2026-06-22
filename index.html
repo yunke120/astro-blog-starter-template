@@ -284,6 +284,49 @@ a:hover { text-decoration: underline; }
 .post-content .checklist li { padding: 4px 0; }
 .post-content .checklist li::before { content: "✓ "; color: #10b981; font-weight: 700; }
 
+/* ===== Knowledge Graph / SVG Diagram ===== */
+.diagram-container svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.diagram-container .title {
+  font-size: 20px;
+  font-weight: 650;
+  fill: var(--fg);
+}
+.diagram-container .label {
+  font-size: 14px;
+  font-weight: 600;
+  fill: var(--fg);
+}
+.diagram-container .small {
+  font-size: 12px;
+  fill: var(--muted);
+}
+.diagram-container .node {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+.diagram-container .neutral { fill: var(--neutral); }
+.diagram-container .input { fill: var(--input); }
+.diagram-container .process { fill: var(--process); }
+.diagram-container .storage { fill: var(--storage); }
+.diagram-container .external { fill: var(--external); }
+.diagram-container .risk { fill: var(--risk); }
+.diagram-container .edge {
+  stroke: var(--line);
+  stroke-width: 1.5;
+  fill: none;
+}
+.diagram-container .zone {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 1;
+  stroke-dasharray: 6 5;
+  opacity: 0.8;
+}
+
 .back-link {
   display: inline-block; margin-bottom: 16px; font-size: .88em;
   color: var(--accent);
@@ -477,23 +520,40 @@ function showPost(post) {
 
   const container = document.getElementById('contentArea');
 
-  // Try to load post content
+  // ===== Load post content =====
   const contentPath = `/posts/${post.slug}/content.html`;
-  fetch(contentPath)
-    .then(r => {
-      if (!r.ok) throw new Error('not found');
-      return r.text();
-    })
-    .then(html => {
+  const diagramPath = `/posts/${post.slug}/diagram.html`;
+
+  Promise.all([
+    fetch(contentPath).then(r => { if (!r.ok) throw new Error(); return r.text(); }),
+    fetch(diagramPath).then(r => r.ok ? r.text() : Promise.resolve(''))
+  ])
+    .then(([contentHtml, diagramHtml]) => {
+      // Extract SVG from diagram HTML
+      let diagramSvg = '';
+      if (diagramHtml) {
+        const match = diagramHtml.match(/<svg[\s\S]*?<\/svg>/i);
+        if (match) {
+          diagramSvg = match[0];
+        }
+      }
+
       container.innerHTML = `
         <a href="/" class="back-link">返回首页</a>
         <div class="post-content">
-          ${html}
+          ${contentHtml}
         </div>
+        ${diagramSvg ? `
+        <div class="post-content" style="margin-top:24px;">
+          <h2 style="border-bottom:none;margin-bottom:4px;">🗺️ 知识图谱</h2>
+          <p style="color:var(--text-tertiary);font-size:0.85em;margin-bottom:16px;">交互式 SVG 知识图谱，支持放大查看</p>
+          <div class="diagram-container" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;overflow-x:auto;">
+            ${diagramSvg}
+          </div>
+        </div>` : ''}
       `;
     })
     .catch(() => {
-      // Fallback to inline content
       container.innerHTML = `
         <a href="/" class="back-link">返回首页</a>
         <div class="post-content">
