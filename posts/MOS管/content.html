@@ -1,0 +1,122 @@
+<h1>MOS 管 — 费曼学习法笔记</h1>
+
+<p class="post-meta">学习日期：2026-06-28 | 方法：费曼学习法</p>
+
+<h2>一、核心问题</h2>
+<p>理解 MOS 管（金属-氧化物-半导体场效应晶体管）的工作原理、分类及其在电路中的作用。</p>
+
+<h2>二、关键概念</h2>
+
+<h3>1. MOS 管是什么</h3>
+<p>MOS 管（MOSFET）是一种<strong>电压控制的电子开关</strong>，有三个引脚，通过 Gate 和 Source 之间的电压差（Vgs）控制 Drain 和 Source 之间是否导通。</p>
+
+<h3>2. 三个引脚</h3>
+<table>
+  <tr>
+    <th>引脚</th>
+    <th>符号</th>
+    <th>作用</th>
+  </tr>
+  <tr>
+    <td>Source (S)</td>
+    <td>源极</td>
+    <td>电流出口（NMOS 通常接地，PMOS 通常接电源）</td>
+  </tr>
+  <tr>
+    <td>Drain (D)</td>
+    <td>漏极</td>
+    <td>电流入口</td>
+  </tr>
+  <tr>
+    <td>Gate (G)</td>
+    <td>栅极</td>
+    <td>控制极——用电压控制是否导通</td>
+  </tr>
+</table>
+
+<h3>3. 两种类型</h3>
+<table>
+  <tr>
+    <th>类型</th>
+    <th>导通条件</th>
+    <th>Source 接法</th>
+  </tr>
+  <tr>
+    <td>NMOS</td>
+    <td>Vgs > Vth（Vth 通常 > 0，约 0.5~0.8V）</td>
+    <td>通常接 GND（地）</td>
+  </tr>
+  <tr>
+    <td>PMOS</td>
+    <td>Vgs < Vth（Vth 通常 < 0）</td>
+    <td>通常接 VDD（电源正极）</td>
+  </tr>
+</table>
+
+<div class="highlight-box">
+  <strong>⚠ 注意：</strong> Vgs > 0 不等于导通！必须超过阈值电压 Vth 才导通。
+</div>
+
+<h3>4. 两种工作状态</h3>
+<table>
+  <tr>
+    <th>状态</th>
+    <th>条件</th>
+    <th>特性</th>
+  </tr>
+  <tr>
+    <td>可变电阻区（线性区）</td>
+    <td>Vgs 刚超过 Vth</td>
+    <td>像可调电阻，Vgs 越大电阻越小</td>
+  </tr>
+  <tr>
+    <td>饱和区（开关区）</td>
+    <td>Vgs 远大于 Vth</td>
+    <td>像开关闭合，全导通</td>
+  </tr>
+</table>
+
+<h2>三、追问回顾</h2>
+
+<h3>追问 1：Vgs 指什么？</h3>
+<p><strong>答案：</strong> Vgs = Vgate − Vsource。不是任意两点之间的电压。</p>
+
+<h3>追问 2：PMOS 为什么 Source 接 VDD？</h3>
+<p><strong>答案：</strong> PMOS 控制正电源通断，NMOS 控制接地回路通断。两者搭配组成 <strong>CMOS（互补 MOS）</strong>，一个 PMOS 拉高电压、一个 NMOS 拉低电压，效率高、功耗低。</p>
+
+<h3>追问 3：MOS 管只有通/断两种状态吗？</h3>
+<p><strong>答案：不是。</strong> Vgs 刚超过 Vth 时电流可调（线性区），Vgs 足够大时才完全导通（饱和区）。这也是 MOS 管能做模拟放大器的原因。</p>
+
+<h2>四、提炼总结</h2>
+
+<div class="highlight-green">
+  <strong>一句话版：</strong> MOS 管是一个电压控制的三脚开关，用 Gate 和 Source 之间的电压差（Vgs）控制 Drain 到 Source 是否导通。NMOS 的 Vgs 大于阈值时导通（Source 通常接地），PMOS 的 Vgs 小于阈值时导通（Source 通常接电源）。当 Vgs 刚刚超过阈值时，电流可调；当 Vgs 远大于阈值时，像普通开关一样全通。
+</div>
+
+<h3>最佳类比：感应水龙头 🚰</h3>
+<ul>
+  <li><strong>Drain（漏极）</strong> → 水流入口</li>
+  <li><strong>Source（源极）</strong> → 水龙头出口</li>
+  <li><strong>Gate（栅极）</strong> → 感应器（感应到你的手 → 开阀）</li>
+  <li><strong>NMOS</strong> → 感应器感应到信号（手靠近）→ 放水</li>
+  <li><strong>PMOS</strong> → 感应器感应到信号消失（手远离）→ 放水（和 NMOS "反着来"）</li>
+  <li><strong>阈值 Vth</strong> → 手离感应器必须足够近才触发（刚触发时水流小，贴上去才全开）</li>
+</ul>
+
+<h2>五、举一反三</h2>
+<ol>
+  <li>CMOS 电路中 NMOS 和 PMOS 如何配对使用，为什么几乎不耗电？</li>
+  <li>MOS 管的 Vth 受温度影响吗？实际设计时如何考虑？</li>
+  <li>MOS 管和 BJT（三极管）在开关特性上有什么本质区别？</li>
+  <li>为什么 MOS 管的 Gate 输入阻抗极高（MΩ 级别）？这对电路设计有什么好处？</li>
+</ol>
+
+<h2>六、掌握度自检清单</h2>
+<ul class="checklist">
+  <li>✅ 我知道 MOS 管有三个引脚叫什么、各自什么功能</li>
+  <li>✅ 我能区分 NMOS 和 PMOS 导通条件的不同</li>
+  <li>✅ 我知道为什么 NMOS 通常 S 接地、PMOS 通常 S 接电源</li>
+  <li>✅ 我理解 Vth（阈值电压）的概念，知道 Vgs > 0 不等于一定导通</li>
+  <li>✅ 我知道 MOS 管有可调电阻区（线性区）和开关区（饱和区）</li>
+  <li>✅ 我能用简单的类比向别人讲清楚 MOS 管的工作原理</li>
+</ul>
